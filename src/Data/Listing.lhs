@@ -114,10 +114,11 @@ instance Listing (SQ.Seq a) where
 instance Ord a => Listing (S.Set a) where
     type Elem (S.Set a) = a
     type Index (S.Set a) = a
-    type IndexElem (S.Set a) = a
+    type IndexElem (S.Set a) = Bool
     toList = S.toList
     fromList = S.fromList
-    lookup s i = if S.member i s then Just i else Nothing
+    lookup s i = if S.member i s then Just True else Nothing
+    (!) = flip S.member
     singleton = S.singleton
     size = S.size
     null = S.null
@@ -129,10 +130,11 @@ instance Ord a => Listing (S.Set a) where
 instance Listing IS.IntSet where
     type Elem IS.IntSet = Int
     type Index IS.IntSet = Int
-    type IndexElem IS.IntSet = Int
+    type IndexElem IS.IntSet = Bool
     toList = IS.toList
     fromList = IS.fromList
-    lookup s i = if IS.member i s then Just i else Nothing
+    lookup s i = if IS.member i s then Just True else Nothing
+    (!) = flip IS.member
     singleton = IS.singleton
     size = IS.size
     null = IS.null
