@@ -1,4 +1,13 @@
-Naren Sundar
+-----------------------------------------------------------------------------
+-- |
+-- Module      :  Data.Listing
+-- Copyright   :  (C) 2013 Naren Sundar
+-- License     :  BSD-style (see the file LICENSE)
+-- Maintainer  :  Naren Sundar <nano.naren@gmx.com>
+-- Stability   :  experimental
+-- Portability :  portable
+--
+----------------------------------------------------------------------------
 
 \begin{code}
 
