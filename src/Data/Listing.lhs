@@ -3,7 +3,6 @@ Naren Sundar
 \begin{code}
 
 {-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE TupleSections #-}
 
 module Data.Listing
     (
@@ -12,7 +11,7 @@ module Data.Listing
     , translate
     ) where
 
-import Prelude hiding (head,tail,null)
+import Prelude hiding (head,tail,null,lookup)
 import Data.List (find)
 import qualified Prelude
 import qualified Data.Sequence as SQ
@@ -28,9 +27,13 @@ import Data.Maybe
 class Listing s where
     type Elem s
     type Index s
+    type IndexElem s
     toList :: s -> [Elem s]
     fromList :: [Elem s] -> s
-    lookup :: s -> Index s -> Maybe (Elem s)
+    lookup :: s -> Index s -> Maybe (IndexElem s)
+
+    (!) :: s -> Index s -> IndexElem s
+    s ! i = fromJust $ lookup s i
 
     singleton :: Elem s -> s
     singleton = fromList.(:[])
@@ -66,6 +69,7 @@ Instances
 instance Listing [a] where
     type Elem [a] = a
     type Index [a] = Int
+    type IndexElem [a] = a
     toList = id
     fromList = id
     -- | zero based
@@ -74,6 +78,7 @@ instance Listing [a] where
 instance Listing (Maybe a) where
     type Elem (Maybe a) = a
     type Index (Maybe a) = ()
+    type IndexElem (Maybe a) = a
     toList = maybeToList
     fromList = listToMaybe
     lookup m _ = m
@@ -85,6 +90,7 @@ instance Listing (Maybe a) where
 instance Listing (SQ.Seq a) where
     type Elem (SQ.Seq a) = a
     type Index (SQ.Seq a) = Int
+    type IndexElem (SQ.Seq a) = a
     toList = F.toList
     fromList = SQ.fromList
     lookup s i = if null s then Nothing else Just (SQ.index s i)
@@ -99,6 +105,7 @@ instance Listing (SQ.Seq a) where
 instance Ord a => Listing (S.Set a) where
     type Elem (S.Set a) = a
     type Index (S.Set a) = a
+    type IndexElem (S.Set a) = a
     toList = S.toList
     fromList = S.fromList
     lookup s i = if S.member i s then Just i else Nothing
@@ -113,6 +120,7 @@ instance Ord a => Listing (S.Set a) where
 instance Listing IS.IntSet where
     type Elem IS.IntSet = Int
     type Index IS.IntSet = Int
+    type IndexElem IS.IntSet = Int
     toList = IS.toList
     fromList = IS.fromList
     lookup s i = if IS.member i s then Just i else Nothing
@@ -127,9 +135,11 @@ instance Listing IS.IntSet where
 instance Ord k => Listing (M.Map k a) where
     type Elem (M.Map k a) = (k,a)
     type Index (M.Map k a) = k
+    type IndexElem (M.Map k a) = a
     toList = M.toList
     fromList = M.fromList
-    lookup m k = (k,) `fmap` M.lookup k m
+    lookup m k = M.lookup k m
+    (!) = (M.!)
     singleton (k,v) = M.singleton k v
     size = M.size
     null = M.null
@@ -141,9 +151,11 @@ instance Ord k => Listing (M.Map k a) where
 instance Listing (IM.IntMap a) where
     type Elem (IM.IntMap a) = (Int,a)
     type Index (IM.IntMap a) = Int
+    type IndexElem (IM.IntMap a) = a
     toList = IM.toList
     fromList = IM.fromList
-    lookup m k = (k,) `fmap` IM.lookup k m
+    lookup m k = IM.lookup k m
+    (!) = (IM.!)
     singleton (k,v) = IM.singleton k v
     size = IM.size
     null = IM.null
