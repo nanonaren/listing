@@ -26,12 +26,17 @@ Examples
 
 ```haskell
 import Data.Listing
+import Data.Set (Set)
+import Data.Map.Lazy (Map)
 
 lst :: [Int]
 lst = [1..10]
 
-someMap :: M.Map String Int
+someMap :: Map String Int
 someMap = fromList [("a",1),("b",2)]
+
+someSet :: Set Int
+someSet = fromList [1..10]
 
 -- | Looking up values is now convinient
 total = lst ! 1 + someMap ! "a"
@@ -47,5 +52,9 @@ maybeEx = head (Just 10) == 10
 --   gets the min. I have plans to put "last" in the interface
 --   that would get the max.
 extract = head someMap == ("a",1)
+
+-- | checking membership in sets
+check = someSet ! 3 == True &&
+        someSet ! 11 == False
 
 ```
