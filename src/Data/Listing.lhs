@@ -50,6 +50,9 @@ class Listing s where
     size :: s -> Int
     size = length.toList
 
+    empty :: s
+    empty = fromList []
+
     null :: s -> Bool
     null = Prelude.null.toList
 
@@ -93,6 +96,7 @@ instance Listing (Maybe a) where
     lookup m _ = m
     size Nothing = 0
     size (Just _) = 1
+    empty = Nothing
     null Nothing = True
     null _ = False
 
@@ -105,6 +109,7 @@ instance Listing (SQ.Seq a) where
     lookup s i = if null s then Nothing else Just (SQ.index s i)
     singleton = SQ.singleton
     size = SQ.length
+    empty = SQ.empty
     null = SQ.null
     head s = let (x SQ.:< _) = SQ.viewl s
              in x
@@ -121,6 +126,7 @@ instance Ord a => Listing (S.Set a) where
     (!) = flip S.member
     singleton = S.singleton
     size = S.size
+    empty = S.empty
     null = S.null
     head s = let Just (x,_) = S.minView s
              in x
@@ -137,6 +143,7 @@ instance Listing IS.IntSet where
     (!) = flip IS.member
     singleton = IS.singleton
     size = IS.size
+    empty = IS.empty
     null = IS.null
     head s = let Just (x,_) = IS.minView s
              in x
@@ -153,6 +160,7 @@ instance Ord k => Listing (M.Map k a) where
     (!) = (M.!)
     singleton (k,v) = M.singleton k v
     size = M.size
+    empty = M.empty
     null = M.null
     head s = let Just (x,_) = M.minViewWithKey s
              in x
@@ -169,6 +177,7 @@ instance Listing (IM.IntMap a) where
     (!) = (IM.!)
     singleton (k,v) = IM.singleton k v
     size = IM.size
+    empty = IM.empty
     null = IM.null
     head s = let Just (x,_) = IM.minViewWithKey s
              in x
