@@ -34,7 +34,7 @@ import qualified Data.Foldable as F
 import Data.Maybe
 
 -- | Minimal definition: toList, fromList, lookup, length
-class (Eq (Length s),Ord (Length s),
+class (Eq (Length s),Ord (Length s),Num (Length s),
        Eq (Index s)) => Listing s where
     type Elem s
     type Length s
