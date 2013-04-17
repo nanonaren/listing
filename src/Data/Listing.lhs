@@ -23,6 +23,7 @@ module Data.Listing
 
 import Prelude hiding (head,tail,null,lookup)
 import Data.List (find)
+import Control.DeepSeq
 import qualified Prelude
 import qualified Data.Sequence as SQ
 import qualified Data.Set as S
@@ -36,6 +37,7 @@ import Data.Maybe
 -- | Minimal definition: toList, fromList, lookup, length
 class (Eq (Length s),Ord (Length s),
        Num (Length s),Integral (Length s),
+       NFData (Length s),
        Eq (Index s)) => Listing s where
     type Elem s
     type Length s
