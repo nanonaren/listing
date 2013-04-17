@@ -17,6 +17,7 @@ cabal-version:       >=1.8
 
 library
   exposed-modules:     Data.Listing
+  ghc-options:	       -O
   -- other-modules:       
   build-depends:
     base         >= 4.6,

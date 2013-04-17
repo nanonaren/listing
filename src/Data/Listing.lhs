@@ -12,6 +12,7 @@
 \begin{code}
 
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE FlexibleContexts #-}
 
 module Data.Listing
     (
@@ -32,13 +33,17 @@ import qualified Data.Foldable as F
 
 import Data.Maybe
 
--- | Minimal definition: toList, fromList, lookup
-class Listing s where
+-- | Minimal definition: toList, fromList, lookup, length
+class (Eq (Length s),Ord (Length s),
+       Eq (Index s),Ord (Index s)) => Listing s where
     type Elem s
+    type Length s
     type Index s
     type IndexElem s
+
     toList :: s -> [Elem s]
     fromList :: [Elem s] -> s
+    size :: s -> Length s
     lookup :: s -> Index s -> Maybe (IndexElem s)
 
     (!) :: s -> Index s -> IndexElem s
@@ -46,9 +51,6 @@ class Listing s where
 
     singleton :: Elem s -> s
     singleton = fromList.(:[])
-
-    size :: s -> Int
-    size = length.toList
 
     empty :: s
     empty = fromList []
@@ -80,15 +82,18 @@ Instances
 
 instance Listing [a] where
     type Elem [a] = a
+    type Length [a] = Int
     type Index [a] = Int
     type IndexElem [a] = a
     toList = id
     fromList = id
+    size = length
     -- | zero based
     lookup xs i = fmap snd.find ((==i).fst).zip [0..] $ xs
 
 instance Listing (Maybe a) where
     type Elem (Maybe a) = a
+    type Length (Maybe a) = Int
     type Index (Maybe a) = ()
     type IndexElem (Maybe a) = a
     toList = maybeToList
@@ -102,6 +107,7 @@ instance Listing (Maybe a) where
 
 instance Listing (SQ.Seq a) where
     type Elem (SQ.Seq a) = a
+    type Length (SQ.Seq a) = Int
     type Index (SQ.Seq a) = Int
     type IndexElem (SQ.Seq a) = a
     toList = F.toList
@@ -118,6 +124,7 @@ instance Listing (SQ.Seq a) where
 
 instance Ord a => Listing (S.Set a) where
     type Elem (S.Set a) = a
+    type Length (S.Set a) = Int
     type Index (S.Set a) = a
     type IndexElem (S.Set a) = Bool
     toList = S.toList
@@ -135,6 +142,7 @@ instance Ord a => Listing (S.Set a) where
 
 instance Listing IS.IntSet where
     type Elem IS.IntSet = Int
+    type Length IS.IntSet = Int
     type Index IS.IntSet = Int
     type IndexElem IS.IntSet = Bool
     toList = IS.toList
@@ -152,6 +160,7 @@ instance Listing IS.IntSet where
 
 instance Ord k => Listing (M.Map k a) where
     type Elem (M.Map k a) = (k,a)
+    type Length (M.Map k a) = Int
     type Index (M.Map k a) = k
     type IndexElem (M.Map k a) = a
     toList = M.toList
@@ -169,6 +178,7 @@ instance Ord k => Listing (M.Map k a) where
 
 instance Listing (IM.IntMap a) where
     type Elem (IM.IntMap a) = (Int,a)
+    type Length (IM.IntMap a) = Int
     type Index (IM.IntMap a) = Int
     type IndexElem (IM.IntMap a) = a
     toList = IM.toList
