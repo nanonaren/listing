@@ -35,7 +35,7 @@ import Data.Maybe
 
 -- | Minimal definition: toList, fromList, lookup, length
 class (Eq (Length s),Ord (Length s),
-       Eq (Index s),Ord (Index s)) => Listing s where
+       Eq (Index s)) => Listing s where
     type Elem s
     type Length s
     type Index s
