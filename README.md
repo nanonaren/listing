@@ -1,6 +1,8 @@
 Listing: Unifying list-like data structures
 ===========================================
 
+TODO: make Length (or Size) a separate class.
+
 This library attemps to solve the painful un-unified similarities
 between Map, HashMap, Set, List, Maybe, Sequence, Vector, Array and so
 forth by providing a single interface that allows one to perform many
